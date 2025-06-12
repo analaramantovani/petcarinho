@@ -114,24 +114,21 @@
             <div class="doses">
                 {% if tipo == "Soro" %}
                 <div class="caixinha">
-
-                        <h3>Cálculo do Soro</h3>
-                        <div class="dosesperguntas">
-                        <label for="desidratacao" >Volume de fluidoterapia:</label>
-                        <select class="opcoes" name="desidratacao">
-                            <option value="leve">Leve - 50ml</option>
-                            <option value="moderada">Moderada - 75ml</option>
-                            <option value="grave">Grave - 100ml</option>
-                        </select>
-
-                        <label for="peso" class="pergunta3">Peso do animal:</label>
-                        <input class="dosecss pergunta2" type="number" name="peso_soro" step="0.01" value="{{ animal.peso }}" required min="0.01">
+                    <h3>Cálculo do Soro</h3>
+                    <div class="dosesperguntas">
+                        <form method="POST" action="{{ url_for('prontuario_soro', codigo_agendamento=agendamento.codigo) }}">
+                            <label for="desidratacao" >Volume de fluidoterapia:</label>
+                            <select class="opcoes" name="desidratacao">
+                                <option value="leve">Leve - 50ml</option>
+                                <option value="moderada">Moderada - 75ml</option>
+                                <option value="grave">Grave - 100ml</option>
+                            </select>
+                            <label for="peso" class="pergunta3">Peso do animal:</label>
+                            <input class="dosecss pergunta2" type="number" name="peso_soro" step="0.01" value="{{ animal.peso }}" required min="0.01">
+                            <button class="botao" type="submit">Salvar</button>
+                        </form>
                     </div>
-                <form method="POST" action="{{ url_for('prontuario_soro', codigo_agendamento=agendamento.codigo) }}">
 
-
-                    <button class="botao" type="submit">Salvar</button>
-                </form> 
                 </div>
 
                 {% elif tipo == "Medicamento" %}

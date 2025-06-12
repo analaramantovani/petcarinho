@@ -903,22 +903,29 @@ def prontuario(codigo_agendamento):
 @app.route("/prontuario_soro/<int:codigo_agendamento>", methods=["GET", "POST"])
 def prontuario_soro(codigo_agendamento):
     try:
+        print('entrei')
         agendamento = ''
         veterinario = ''
         animal = ''
+        recente = {'datahora': ''}
+        print(recente)
         for a in agendamentos:
             if a['codigo'] == codigo_agendamento:
                 agendamento = a
                 animal = animais[a['codigopet']]
+                print(animal)
         for a in agendamentos:
             if a['codigopet'] == animal['codigo']:
                 if a['datahora'] > recente['datahora'] and a['datahora'] < agendamento['datahora']:
                     recente = a
+                    print(recente)
         for v in usuarios:
             if v['codigo'] == agendamento['codigovet']:
                 veterinario = v
+                print(veterinario)
         codigovet = int(veterinario['codigo'])
-        resultado_soro = None
+        resultado_soro = ''
+        print(codigovet)
         if request.method == "POST":
             valores_desidratacao = {
                 'leve': 50,
@@ -927,12 +934,17 @@ def prontuario_soro(codigo_agendamento):
             }
             desidratacao = request.form["desidratacao"]
             peso = float(request.form["peso_soro"])
+            print(desidratacao)
+            print(peso)
 
             if desidratacao in valores_desidratacao:
                 resultado_soro = valores_desidratacao[desidratacao] * peso
                 agendamentos[codigo_agendamento]['prontuario'] = f'Soro: {resultado_soro}'
                 agendamentos[codigo_agendamento]['ativo'] = False
+
+                print(agendamentos)
                 flash(f"O volume para ser ministrado é de {resultado_soro} ml", 'prontuario')
+
                 if LOGADO == 0:
                     return redirect(url_for('dashboard'))
                 elif LOGADO == 1:
@@ -965,6 +977,7 @@ def prontuario_medicamento(codigo_agendamento):
             agendamento = ''
             veterinario = ''
             animal = ''
+            recente = {'datahora': ''}
             for a in agendamentos:
                 if a['codigo'] == codigo_agendamento:
                     agendamento = a
@@ -972,6 +985,9 @@ def prontuario_medicamento(codigo_agendamento):
                     print(animal)
             for a in agendamentos:
                 if a['codigopet'] == animal['codigo']:
+                    print(a['datahora'])
+                    print(agendamento['datahora'])
+                    print(recente['datahora'])
                     if a['datahora'] > recente['datahora'] and a['datahora'] < agendamento['datahora']:
                         recente = a
                         print(recente)
