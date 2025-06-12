@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PetCarinho</title>
+    <link rel="stylesheet" href="../static/css/estilo.css">
+</head>
+
+<body>
+<header class="d-flex">
+    <img src="../static/img/logo.png" alt="Logo da PetCarinho">
+    <nav class="cabecalho d-flex">
+        <a href="/#home">Home</a>
+        <a href="/#quem_somos">Quem somos</a>
+        <a href="/#servicos">Serviços</a>
+        <a href="/#depoimentos">Depoimentos</a>
+        <div class="botoes">
+            <a class="login animacao" href="/sair">Sair</a>
+        </div>
+    </nav>
+</header>
+
+<main class="padding-bottom">
+    <section class="seta-mensagens">
+        <a href="/"><img src="../static/img/seta.png" alt="Seta voltar"></a>
+
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% if mensagens %}
+        <div class="mensagens">
+            {% for categoria, mensagem in mensagens %}
+            {% if categoria == 'erro' %}
+            <div class="mensagem-erro">
+                <p>⚠️ {{ mensagem }}</p>
+            </div>
+            {% elif categoria == 'sucesso' %}
+            <div class="mensagem-sucesso">
+                <p>🎉 {{ mensagem }}</p>
+            </div>
+            {% elif categoria == 'prontuario' %}
+            <div class="mensagem-prontuario">
+                <p>🩺 {{ mensagem }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </section>
+
+
+    <section>
+        <h3 class="titulo">Dashboard da clínica</h3>
+    </section>
+
+    <section class="flex between inicio espaco">
+        <div>
+            <div class="flex between meio">
+                <h5 class="subtitulo">Pacientes</h5>
+                <a class="adicionar2 animabotaoadd" href="{{ url_for('cadastro_animal', codigo=codigo) }}">+</a>
+            </div>
+
+            <div class="pets">
+                {% for animal in animais %}
+                {% if animal.nome != "" %}
+                <div class="petdiv">
+                    <div>
+                        <div class="flex right">
+                            <a href="/edicao_animal/{{ animal.codigo }}"><img src="../static/img/editar.png"
+                                                                              alt="Ícone editar" class="botao-pet"></a>
+                            <a href="/exclusao_animal/{{ animal.codigo }}"><img
+                                    src="../static/img/excluir.png" alt="Ícone excluir" class="botao-pet"></a>
+                        </div>
+                        {% if animal.especie == "cachorro" %}
+                        <img class="icone-pet" src="../static/img/cachorro.png" alt="Ícone cachorro">
+                        {% elif animal.especie == "gato" %}
+                        <img class="icone-pet" src="../static/img/gato.png" alt="Ícone gato">
+                        {% elif animal.especie == "coelho" %}
+                        <img class="icone-pet" src="../static/img/coelhoI.png" alt="Ícone coelho">
+                        {% elif animal.especie == "calopsita" %}
+                        <img class="icone-pet" src="../static/img/calopsita.png" alt="Ícone calopsita">
+                        {% endif %}
+                        <h6 class="pet-nome">{{ animal.nome }}</h6>
+                        <p class="pet-texto">{{ animal.raca }}</p>
+                        <p class="pet-texto">{{ animal.data_nascimento_formatada }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <p class="texto-agendamento between">Não há pacientes cadastrados.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <div class="flex between meio">
+                <h5 class="subtitulo">Agendamentos</h5>
+                <a href="{{ url_for('agendamento', codigo=codigo)}}" class="adicionar2 animabotaoadd">+</a>
+            </div>
+            <div>
+                <ul>
+                    {% for agendamento in agendamentos %}
+                    {% if agendamento.datahora_formatada != '' %}
+                    <li class="agendamentostexto">
+                            <p>Pet: {{ agendamento.nomepet }}</p>
+                            <p>Data e hora: {{ agendamento.datahora_formatada }}</p>
+                            <p>Veterinário: {{ agendamento.nomevet }}</p>
+
+                            <div class="botoes-container">
+                                <a class="botaoagendamento animacao botaoexclui animabotaored"
+                                   href="{{ url_for('exclusao_agendamentos', codigo_agendamento=agendamento.codigo) }}">Excluir</a>
+
+                                {% if agendamento.remarcavel %}
+                                <a class="botaoagendamento animacao botaoremarca animabotaoverde"
+                                   href="{{ url_for('reagendamento', codigo_agendamento=agendamento.codigo) }}">Remarcar</a>
+                                {% else %}
+                                <a class="botaoagendamento animacao"
+                                   href="{{ url_for('prontuario', codigo_agendamento=agendamento.codigo) }}">Prontuário</a>
+                                {% endif %}
+                            </div>
+                    </li>
+                    {% endif %}
+                    {% else %}
+                    <p class="texto-agendamento between">Não há agendamentos.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="flex between inicio espaco">
+        <div>
+            <div class="flex between meio">
+                <h5 class="subtitulo">Tutores</h5>
+                <a href="{{ url_for('cadastro_usuario') }}" class="adicionar2 animabotaoadd">+</a>
+            </div>
+
+            <div class="pets">
+                {% for tutor in tutores %}
+                {% if tutor.nome != "" %}
+                <div class="tutordiv">
+                    <div>
+                        <div class="flex right">
+                            <a href="/edicao_usuario/{{ tutor['codigo'] }}"><img src="../static/img/editar.png"
+                                                                                 alt="Ícone editar"
+                                                                                 class="botao-pet"></a>
+                            <a href="/exclusao_usuario/{{ tutor['codigo'] }}"><img src="../static/img/excluir.png"
+                                                                                   alt="Ícone excluir"
+                                                                                   class="botao-pet"></a>
+                        </div>
+                        <h6 class="pet-nome">{{ tutor['nome'] }}</h6>
+                        <ul></ul>
+                        {% for animal in tutor['animais'] %}
+                        <li class="pet-texto left">{{ animal }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <p class="texto-agendamento between">Não há tutores cadastrados.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <div class="flex between meio">
+                <h5 class="subtitulo">Veterinários</h5>
+                <a href="/cadastro_veterinario" class="adicionar2 animabotaoadd">+</a>
+            </div>
+
+            <div class="pets">
+                {% for veterinario in veterinarios %}
+                {% if veterinario.nome != "" %}
+                <div class="vetdiv">
+                    <div>
+                        <div class="flex right">
+                            <a href="/edicao_veterinario/{{ veterinario['codigo'] }}"><img
+                                    src="../static/img/editar.png" alt="Ícone editar" class="botao-pet"></a>
+                            <a href="/exclusao_veterinario/{{ veterinario['codigo'] }}"><img
+                                    src="../static/img/excluir.png" alt="Ícone excluir" class="botao-pet"></a>
+                        </div>
+                        <h6 class="vet-nome">{{ veterinario['nome'] }}</h6>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <p class="texto-agendamento between">Não há veterinários cadastrados.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<footer class="flex">
+    <div class="flex gap-vinte">
+        <img src="../static/img/logorodape.png" alt="Logo PetCarinho" class="logo-footer">
+        <div class="nav-footer flex column gap-nav-footer">
+            <a href="/#home">Home</a>
+            <a href="/#quem_somos">Quem somos</a>
+            <a href="#servicos">Serviços</a>
+            <a href="/#depoimentos">Depoimentos</a>
+        </div>
+    </div>
+    <div class="flex inferior redes-sociais">
+        <div class="flex column gap-vinte">
+            <div class="redes-sociais-texto">
+                <h5 class="texto-branco">Redes Sociais:</h5>
+                <p class="texto-branco">Instagram: <a href="http://instagram.com" target="_blank"
+                                                      class="texto-branco">@petcarinho</a></p>
+                <p class="texto-branco">Facebook: <a href="http://facebook.com" target="_blank"
+                                                     class="texto-branco">PetCarinho Clínica Veterinária</a></p>
+                <p class="texto-branco">Twitter: <a href="http://twitter.com" target="_blank"
+                                                    class="texto-branco">@petcarinho_vet</a></p>
+            </div>
+            <img src="../static/img/pagamento.png" alt="Formas de pagamento" class="pagamento">
+        </div>
+    </div>
+</footer>
+</body>
+
+</html>
