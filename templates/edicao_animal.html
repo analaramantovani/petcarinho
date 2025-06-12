@@ -51,7 +51,7 @@
         </section>
 
         <section class="ajustar-section">
-            <div class="foto alinhando-foto">
+            <div class="foto alinhando-img">
                 <img src="../static/img/dog_usuario.png" alt="Dog Usuário">
             </div>
 
@@ -62,7 +62,7 @@
             </div>
 
 
-            <form class="inputs prala" action="{{ url_for('edicao_animal', codigo=animal['codigo']) }}" method="POST">
+            <form class="inputs prala centraliza3" action="{{ url_for('edicao_animal', codigo=animal['codigo']) }}" method="POST">
                 <div class="pergunta">
                     <label class="nomeinput" for="nome">Nome: </label>
                     <input type="text" id="nome" name="nome" required value="{{ animal.nome }}">

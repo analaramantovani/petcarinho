@@ -854,6 +854,10 @@ gap: 265px;
     margin-left: 475px;
 }
 
+.alinhando-img{
+    margin-left: 630px;
+}
+
 .alinhando-foto2{
     margin-left: 580px;
 }
@@ -1337,6 +1341,18 @@ html {
     padding-left: 6vw;
 }
 
+.centraliza2 {
+    display: flex;
+    margin-left: 80px;
+    padding-left: 6vw;
+}
+
+.centraliza3 {
+    display: flex;
+    margin-left: 350px;
+    padding-left: 6vw;
+}
+
 .prala {
     padding: 40px 20px;
     max-width: 500px;
@@ -1460,7 +1476,7 @@ html {
     display: flex;
     position: absolute;
     left: 650px;
-    top: 690px;
+    top: 650px;
 }
 
 .dosesperguntas {

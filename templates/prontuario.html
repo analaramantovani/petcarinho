@@ -27,9 +27,9 @@
             {% if LOGADO == 0 %}
                 href="{{ url_for('dashboard') }}"
             {% elif LOGADO == 1 %}
-                href="{{ url_for('pagina_usuario', codigo=usuario['codigo']) }}"
+                href="{{ url_for('pagina_usuario', codigo=codigo) }}"
             {% elif LOGADO == 2 %}
-                href="{{ url_for('pagina_veterinario', codigo=usuario['codigo']) }}"
+                href="{{ url_for('pagina_veterinario', codigo=codigo) }}"
             {% else %}
                 href="/"
             {% endif %}
@@ -145,8 +145,9 @@
 
                         <label class="pergunta3" for="peso">Peso do animal:</label>
                         <input class="dosecss pergunta2" type="number" name="peso_medicamento" step="0.01" value="{{ animal.peso }}" required min="0.01">                    
+                        <button class="botao" type="submit">Salvar</button>
+                        </form>
                     </div>
-                    <button class="botao" type="submit">Salvar</button>
                 </div>
 
 

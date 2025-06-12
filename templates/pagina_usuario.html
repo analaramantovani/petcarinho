@@ -98,7 +98,6 @@
                 {% for animal in animais %}
                 {% if animal.nome != "" %}
                 <div class="petdiv">
-                    <div>
                         <div class="flex right">
                             <a href="/edicao_animal/{{ animal.codigo }}"><img
                                     src="../static/img/editar.png" alt="Ícone editar" class="botao-pet"></a>
@@ -125,7 +124,6 @@
                         <p class="texto-agendamento alinharpets">Não há pets cadastrados.</p>
                     </div>
                     {% endfor %}
-                </div>
             </div>
         </div>
     </section>

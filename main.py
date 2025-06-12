@@ -857,6 +857,7 @@ def exclusao_animal(codigo):
 @app.route('/prontuario/<int:codigo_agendamento>', methods=['GET', 'POST'])
 def prontuario(codigo_agendamento):
     try:
+        print('entrnadoooooo')
         agendamento = ''
         veterinario = ''
         animal = ''
@@ -871,31 +872,31 @@ def prontuario(codigo_agendamento):
         for v in usuarios:
             if v['codigo'] == agendamento['codigovet']:
                 veterinario = v
-        codigo = veterinario['codigo']
+        codigovet = int(veterinario['codigo'])
         data_obj = datetime.fromisoformat(animal['data_nascimento'])
         animal['data_nascimento_formatada'] = data_obj.strftime('%d/%m/%Y')
         if request.method == 'POST':
             receita = request.form.get('receita')
             if receita == "Soro" or receita == "Medicamento":
-                return render_template('prontuario.html', codigo_agendamento=codigo_agendamento, agendamento=agendamento, animal=animal, tipo=receita, recente=recente, codigo=codigo, LOGADO=LOGADO)
+                return render_template('prontuario.html', codigo_agendamento=codigo_agendamento, agendamento=agendamento, animal=animal, tipo=receita, recente=recente, codigo=codigovet, LOGADO=LOGADO)
             else:
                 agendamentos[codigo_agendamento]['prontuario'] = 'Não houve a prescrição de nenhum medicamento ou soro'
                 agendamentos[codigo_agendamento]['ativo'] = False
                 flash('Não houve a prescrição de nenhum medicamento ou soro', 'prontuario')
                 if LOGADO == 2:
-                    return redirect(url_for('pagina_veterinario', codigo=codigo))
+                    return redirect(url_for('pagina_veterinario', codigo=codigovet))
                 else:
                     return redirect('/dashboard')
         else:
-            return render_template('prontuario.html', codigo_agendamento=codigo_agendamento, agendamento=agendamento, animal=animal, recente=recente, codigo=codigo, LOGADO=LOGADO)
+            return render_template('prontuario.html', codigo_agendamento=codigo_agendamento, agendamento=agendamento, animal=animal, recente=recente, codigo=codigovet, LOGADO=LOGADO)
     except:
         flash(f'Ocorreu um erro inesperado', 'erro')
         if LOGADO == 0:
             return redirect(url_for('dashboard'))
         elif LOGADO == 1:
-            return redirect(url_for('pagina_usuario', codigo=codigo))
+            return redirect(url_for('pagina_usuario', codigo=codigovet))
         elif LOGADO == 2:
-            return redirect(url_for('pagina_veterinario', codigo=codigo))
+            return redirect(url_for('pagina_veterinario', codigo=codigovet))
         else:
             return redirect('/')
 
@@ -916,7 +917,7 @@ def prontuario_soro(codigo_agendamento):
         for v in usuarios:
             if v['codigo'] == agendamento['codigovet']:
                 veterinario = v
-        codigo = veterinario['codigo']
+        codigovet = int(veterinario['codigo'])
         resultado_soro = None
         if request.method == "POST":
             valores_desidratacao = {
@@ -935,23 +936,23 @@ def prontuario_soro(codigo_agendamento):
                 if LOGADO == 0:
                     return redirect(url_for('dashboard'))
                 elif LOGADO == 1:
-                    return redirect(url_for('pagina_usuario', codigo=codigo))
+                    return redirect(url_for('pagina_usuario', codigo=codigovet))
                 elif LOGADO == 2:
-                    return redirect(url_for('pagina_veterinario', codigo=codigo))
+                    return redirect(url_for('pagina_veterinario', codigo=codigovet))
                 else:
                     return redirect('/')
             else:
                 flash("Erro! Grau de desidratação inválido.")
-                return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigo, LOGADO=LOGADO)
-        return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigo, LOGADO=LOGADO)
+                return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO)
+        return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO)
     except:
         flash(f'Ocorreu um erro inesperado', 'erro')
         if LOGADO == 0:
             return redirect(url_for('dashboard'))
         elif LOGADO == 1:
-            return redirect(url_for('pagina_usuario', codigo=codigo))
+            return redirect(url_for('pagina_usuario', codigo=codigovet))
         elif LOGADO == 2:
-            return redirect(url_for('pagina_veterinario', codigo=codigo))
+            return redirect(url_for('pagina_veterinario', codigo=codigovet))
         else:
             return redirect('/')
 
@@ -959,24 +960,29 @@ def prontuario_soro(codigo_agendamento):
 @app.route("/prontuario_medicamento/<int:codigo_agendamento>", methods=["GET", "POST"])
 def prontuario_medicamento(codigo_agendamento):
     try:
-        agendamento = ''
-        veterinario = ''
-        animal = ''
-        for a in agendamentos:
-            if a['codigo'] == codigo_agendamento:
-                agendamento = a
-                animal = animais[a['codigopet']]
-        for a in agendamentos:
-            if a['codigopet'] == animal['codigo']:
-                if a['datahora'] > recente['datahora'] and a['datahora'] < agendamento['datahora']:
-                    recente = a
-        for v in usuarios:
-            if v['codigo'] == agendamento['codigovet']:
-                veterinario = v
-        codigo = veterinario['codigo']
-        resultado_dose = ''
-
         if request.method == "POST":
+            print('entrei')
+            agendamento = ''
+            veterinario = ''
+            animal = ''
+            for a in agendamentos:
+                if a['codigo'] == codigo_agendamento:
+                    agendamento = a
+                    animal = animais[a['codigopet']]
+                    print(animal)
+            for a in agendamentos:
+                if a['codigopet'] == animal['codigo']:
+                    if a['datahora'] > recente['datahora'] and a['datahora'] < agendamento['datahora']:
+                        recente = a
+                        print(recente)
+            for v in usuarios:
+                if v['codigo'] == agendamento['codigovet']:
+                    veterinario = v
+                    print(veterinario)
+            codigovet = veterinario['codigo']
+            print(codigovet)
+            resultado_dose = ''
+
             dose_recomendada = float(request.form["dose_recomendada"])
             peso = float(request.form["peso_medicamento"])
             resultado_dose = dose_recomendada * peso
@@ -985,20 +991,18 @@ def prontuario_medicamento(codigo_agendamento):
             agendamentos[codigo_agendamento]['ativo'] = False
             if LOGADO == 0:
                 return redirect(url_for('dashboard'))
-            elif LOGADO == 1:
-                return redirect(url_for('pagina_usuario', codigo=codigo))
             elif LOGADO == 2:
-                return redirect(url_for('pagina_veterinario', codigo=codigo))
+                return redirect(url_for('pagina_veterinario', codigo=codigovet))
             else:
                 return redirect('/')
-        return render_template("prontuario.html", animal=animal, agendamento=agendamento, LOGADO=LOGADO)
+        return render_template("prontuario.html", animal=animal, agendamento=agendamento, LOGADO=LOGADO, codigo=codigovet)
 
     except:
         flash('Ocorreu um erro inesperado', 'erro')
         if LOGADO == 0:
             return redirect(url_for('dashboard'))
         elif LOGADO == 2:
-            return redirect(url_for('pagina_veterinario', codigo=codigo))
+            return redirect(url_for('pagina_veterinario', codigo=codigovet))
         else:
             return redirect('/')
 
@@ -1056,7 +1060,7 @@ def agendamento(codigo):
                 'nomepet': nomeanimal,
                 'nometutor': int(tutor),
                 'telefone': telefone,
-                'codigovet': codigovet,
+                'codigovet': int(codigovet),
                 'nomevet': veterinario['nome'],
                 'datahora': datahora,
                 'sintomas': sintomas,
