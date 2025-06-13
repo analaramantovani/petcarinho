@@ -171,6 +171,12 @@ header a:hover {
     font-weight: normal;
 }
 
+.titulo2 { /*define fonte, tamanho e espaço para titulo*/
+    font-family: 'McLaren', sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+}
+
 .subtitulo { /*define fonte, tamanho e espaço para subtitulo*/
     font-family: 'McLaren', sans-serif;
     font-size: 25px;
@@ -846,7 +852,7 @@ gap: 265px;
 }
 .fotorodape {
     position: absolute;
-    top: 2655px;
+    top: 2659px;
     right: 0;
 }
 
@@ -1125,9 +1131,16 @@ html {
 
 .info-pet{
     display: flex;
-    gap: 50px;
-    margin-top: 40px;
-    margin-bottom: 100px;
+    justify-content: space-evenly;
+}
+
+.info-pet div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 30px;
+    gap: 10px;
+    width: 300px;
 }
 
 .centro{
@@ -1140,13 +1153,7 @@ html {
 }
 
 .info1{
-    display: flex;
-    flex-direction: column;
     background-color: var(--cor-rosa-cards);
-    border-radius: 20px;
-    padding: 30px;
-    margin-left: 90px;
-    width: 450px;
 }
 
 .afastar{
@@ -1164,10 +1171,10 @@ html {
     margin-bottom: 20px;
 }
 
-.afastar4{
-    margin-bottom: 100px;
-    justify-content: center;
-    margin-left: 80px;
+.calculo{
+    padding: 50px;
+    justify-content: space-evenly;
+
 }
 
 
@@ -1177,14 +1184,16 @@ html {
 
 
 .info2{
-    display: flex;
-    flex-direction: column;
     background-color: var(--cor-slamao-fundo);
-    border-radius: 20px;
-    padding: 30px;
-    position: absolute;
-    left: 800px;
-    width: 450px;
+}
+
+.info3 {
+    background-color: var(--cor-roxo-fundo);
+}
+
+.selecionar {
+    gap: 10px;
+    flex-direction: column
 }
 
 .campo textarea {
@@ -1210,10 +1219,6 @@ html {
     margin-bottom: 10px;
 }
 
-.calculo{
-    display: flex;
-    text-align: center;
-}
 
 .agendamentos2 {
   display: flex;
@@ -1388,12 +1393,11 @@ html {
     align-items: center;
 }
 .input_dose {
-    background-color: #ffdff8;
+    border: 3px solid #ffdff8;
     border-radius: 80px;
     bottom: 80px;
-    border: none;
-    width: 200px;
-    height: 30px;
+    width: 300px;
+    padding: 5px 20px;
 }
 
 .receita-veterinaria {
@@ -1474,16 +1478,13 @@ html {
 .doses {
     justify-content: center;
     display: flex;
-    position: absolute;
-    left: 650px;
-    top: 650px;
 }
 
 .dosesperguntas {
+    margin-top: 10px;
     display: flex;
-    position: relative;
-    top: 20px;
-    right: 10px;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .pergunta2 {
@@ -1493,12 +1494,9 @@ html {
     margin-bottom: 5px;
 }
 
-
-.doses button {
-    position: relative;
-    display: flex;
-    top: 11px;
-    left: 464px;
+.lado {
+    flex-direction: row;
+    gap: 60px;
 }
 
 
@@ -1518,31 +1516,21 @@ html {
     border: dashed #e7ccf0 ;
     border-radius: 25px;
     box-shadow: 6px 9px 8px 3px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 600px;
+}
+
+.caixinhavazia {
     padding: 20px;
     height: 150px;
     width: 600px;
 }
 
-.pergunta3 {
-    display: flex;
-    position: absolute;
-    left: 31px;
-    top: 56px;
-}
-
-.butaozin {
-    position: absolute;
-    left: 269px;
-    bottom: -155px;
-}
 
 .opcoes {
     border-radius: 60px;
     background-color: var(--cor-rosa);
     border: none;
     width: 210px;
-    height: 31px;
-    padding: 6px; 
-    position: absolute;
-    right: 200px;
+    padding: 6px;
 }

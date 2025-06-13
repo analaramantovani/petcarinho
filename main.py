@@ -193,12 +193,12 @@ agendamentos = [{
         'telefone': 'N/A',
         'codigovet': 2,
         'nomevet': 'Gustavo',
-        'datahora': '2025-07-01T09:00',
+        'datahora': '2025-06-12T22:00',
         'sintomas': 'Febre e apatia',
         'remarcavel': True,
-        'datahora_obj': datetime(2025, 7, 1, 9, 0),
-        'datahora_formatada': '01/07/2025 às 09:00',
-        'data_somente': date(2025, 7, 1),
+        'datahora_obj': datetime(2025, 6, 12, 22, 0),
+        'datahora_formatada': '12/06/2025 às 09:00',
+        'data_somente': date(2025, 6, 12),
     },
     {
         'ativo': True,
@@ -391,7 +391,7 @@ def pagina_veterinario(codigo):
         for a in agendamentos:
             if a['data_somente'] == HOJE:
                 a['remarcavel'] = False
-            if a['nomevet'] == usuario['nome']:
+            if a['codigovet'] == usuario['codigo']:
                 if a['ativo'] == True and a['datahora_obj'] >= datetime.today() and 'prontuario' not in a:
                     agendamentos_vet.append(a)
         for av in agendamentos_vet:
@@ -660,7 +660,7 @@ def cadastro_veterinario():
 
 @app.route('/edicao_veterinario/<int:codigo>', methods=['GET', 'POST'])
 def edicao_veterinario(codigo):
-    # try:
+    try:
         for u in usuarios:
             if u['codigo'] == codigo:
                 usuario = u
@@ -683,13 +683,13 @@ def edicao_veterinario(codigo):
                 elif s in especiais:
                     especial = True
             if maiuscula == True and minuscula == True and numero == True and especial == True:
-                usuario['nome'] = request.form.get('nome')
                 email = request.form.get('email')
                 for u in usuarios:
                     if u['email'] == email and u['codigo'] != usuario['codigo']:
                         flash('Esse e-mail já está cadastrado!', 'erro')
                         return render_template('edicao_veterinario.html', usuario=usuario, codigo=codigo, LOGADO=LOGADO)
-                usuario['email'] == email
+                usuario['nome'] = request.form.get('nome')
+                usuario['email'] = email
                 usuario['numero_registro'] = request.form.get('numeroderegistro')
                 usuario['telefone'] = request.form.get('telefone')
                 usuario['senha'] = request.form.get('senha')
@@ -702,16 +702,17 @@ def edicao_veterinario(codigo):
                     return redirect(url_for('dashboard'))
                 elif LOGADO == 1:
                     return redirect(url_for('pagina_usuario', codigo=codigo))
+                elif LOGADO == 2:
+                    return redirect(url_for('pagina_veterinario', codigo=codigo))
                 else:
                     return redirect('/')
             else:
-                flash(f'Não foi possível editar esse veterinário', 'erro')
                 return render_template('edicao_veterinario.html', usuario=usuario, LOGADO=LOGADO)
         return render_template('edicao_veterinario.html', usuario=usuario, codigo=codigo, LOGADO=LOGADO)
 
-    # except:
-    #     flash(f'Não foi possível editar esse veterinário', 'erro')
-    #     return render_template('edicao_veterinario.html', usuario=usuario, LOGADO=LOGADO)
+    except:
+        flash(f'Não foi possível editar esse veterinário', 'erro')
+        return render_template('edicao_veterinario.html', usuario=usuario, LOGADO=LOGADO)
 
 @app.route('/exclusao_veterinario/<int:codigo>', methods=['GET', 'POST'])
 def exclusao_veterinario(codigo):
@@ -932,31 +933,34 @@ def prontuario_soro(codigo_agendamento):
                 'moderada': 75,
                 'grave': 100
             }
+
             desidratacao = request.form["desidratacao"]
             peso = float(request.form["peso_soro"])
-            print(desidratacao)
-            print(peso)
 
-            if desidratacao in valores_desidratacao:
-                resultado_soro = valores_desidratacao[desidratacao] * peso
-                agendamentos[codigo_agendamento]['prontuario'] = f'Soro: {resultado_soro}'
-                agendamentos[codigo_agendamento]['ativo'] = False
-
-                print(agendamentos)
-                flash(f"O volume para ser ministrado é de {resultado_soro} ml", 'prontuario')
-
-                if LOGADO == 0:
-                    return redirect(url_for('dashboard'))
-                elif LOGADO == 1:
-                    return redirect(url_for('pagina_usuario', codigo=codigovet))
-                elif LOGADO == 2:
-                    return redirect(url_for('pagina_veterinario', codigo=codigovet))
-                else:
-                    return redirect('/')
+            if peso <= 0:
+                flash("Erro! Peso inválido", 'erro')
+                return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO, tipo="Soro")
             else:
-                flash("Erro! Grau de desidratação inválido.")
-                return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO)
-        return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO)
+                if desidratacao in valores_desidratacao:
+                    resultado_soro = valores_desidratacao[desidratacao] * peso
+                    agendamentos[codigo_agendamento]['prontuario'] = f'Soro: {resultado_soro}'
+                    agendamentos[codigo_agendamento]['ativo'] = False
+
+                    print(agendamentos)
+                    flash(f"O volume para ser ministrado é de {resultado_soro} ml", 'prontuario')
+
+                    if LOGADO == 0:
+                        return redirect(url_for('dashboard'))
+                    elif LOGADO == 1:
+                        return redirect(url_for('pagina_usuario', codigo=codigovet))
+                    elif LOGADO == 2:
+                        return redirect(url_for('pagina_veterinario', codigo=codigovet))
+                    else:
+                        return redirect('/')
+                else:
+                    flash("Erro! Grau de desidratação inválido", 'erro')
+                    return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO, tipo="Soro")
+            return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO)
     except:
         flash(f'Ocorreu um erro inesperado', 'erro')
         if LOGADO == 0:
@@ -1001,17 +1005,25 @@ def prontuario_medicamento(codigo_agendamento):
 
             dose_recomendada = float(request.form["dose_recomendada"])
             peso = float(request.form["peso_medicamento"])
-            resultado_dose = dose_recomendada * peso
-            flash(f"A dose recomendada é {resultado_dose} mg", 'prontuario')
-            agendamentos[codigo_agendamento]['prontuario'] = f'Medicamento: {resultado_dose}'
-            agendamentos[codigo_agendamento]['ativo'] = False
-            if LOGADO == 0:
-                return redirect(url_for('dashboard'))
-            elif LOGADO == 2:
-                return redirect(url_for('pagina_veterinario', codigo=codigovet))
+
+            if peso <= 0:
+                flash("Erro! Peso inválido", 'erro')
+                return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO, tipo="Medicamento")
+            elif dose_recomendada <= 0:
+                flash("Erro! Dose inválida", 'erro')
+                return render_template("prontuario.html", animal=animal, agendamento=agendamento, codigo=codigovet, LOGADO=LOGADO, tipo="Medicamento")
             else:
-                return redirect('/')
-        return render_template("prontuario.html", animal=animal, agendamento=agendamento, LOGADO=LOGADO, codigo=codigovet)
+                resultado_dose = dose_recomendada * peso
+                flash(f"A dose recomendada é {resultado_dose} mg", 'prontuario')
+                agendamentos[codigo_agendamento]['prontuario'] = f'Medicamento: {resultado_dose}'
+                agendamentos[codigo_agendamento]['ativo'] = False
+                if LOGADO == 0:
+                    return redirect(url_for('dashboard'))
+                elif LOGADO == 2:
+                    return redirect(url_for('pagina_veterinario', codigo=codigovet))
+                else:
+                    return redirect('/')
+            return render_template("prontuario.html", animal=animal, agendamento=agendamento, LOGADO=LOGADO, codigo=codigovet)
 
     except:
         flash('Ocorreu um erro inesperado', 'erro')

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetCarinho</title>
+    <title>PetCarinho - Prontuário</title>
     <link rel="stylesheet" href="../static/css/estilo.css">
 </head>
 
@@ -56,20 +56,21 @@
 
         </section>
 
-        <section class="titulo centro1">
-            <h1>Prontuário</h1>
+        <section>
+            <h3 class="titulo">Prontuário</h3>
         </section>
 
-        <section>
-            <div class="info-pet">
+        <section class="info-pet">
                 <div class="info1 ">
                     <h2 class="mclaren">Informações do pet</h2>
                     <p class="quicksand">Nome: <span class="texto-usuario">{{ animal.nome }}</span></p>
                     <p class="quicksand">Espécie: <span class="texto-usuario">{{ animal.especie }}</span></p>
                     <p class="quicksand">Raça: <span class="texto-usuario">{{ animal.raca }}</span></p><p class="quicksand">Data de nascimento: <span class="texto-usuario">{{ animal.data_nascimento_formatada }}</span></p>
+                </div>
+                <div class="info3">
                     <h2 class="mclaren">Informações da última consulta</h2>
                     {% if recente and recente.datahora != "" %}
-                        <p class="texto-usuario">Veterinário:{{ recente.nomevet }}</p>
+                        <p class="texto-usuario">Veterinário: {{ recente.nomevet }}</p>
                         <p class="texto-usuario">Data: {{ recente.datahora_formatada }}</p>
                         {% if 'prontuario' in recente %}
                             <p class="texto-usuario">{{ recente.prontuario }}</p>
@@ -85,75 +86,66 @@
                     <h3 class="mclaren">Sintomas relatados pelo tutor:</h3>
                     <p class="texto-usuario">{{ agendamento.sintomas}}</p>
                 </div>
+        </section>
 
-
-            </div>
-
-                            <section class="afastar4">
-                    <form method="POST" action="{{ url_for('prontuario', codigo_agendamento=agendamento.codigo) }}">
-                        <div class="receita-veterinaria arruma">
-                            <h3 class="afastar3">Receita veterinária</h3>
-                                <select class="input_dose quicksand" name="receita" id="receita">
-                                    <option value="0">Selecione:</option>
-                                    <option value="Medicamento">- Medicamento</option>
-                                    <option value="Soro">- Soro</option>
-                                    <option value="Nao necessario">- Não foi necessário</option>
-                                </select>
-                        </div>
-                        <br><br>
-                            <button class="botao animacao butaozin" type="submit">Selecionar</button>                        
-                        <div class="botaosalvar botaoalinhar afastar2">
-
-                        </div>
-                    </form>
-                </section>
-
-
-        <section>
-
+        <section class="calculo flex">
+                <form method="POST" action="{{ url_for('prontuario', codigo_agendamento=agendamento.codigo) }}" class="flex selecionar">
+                        <h3 class="titulo2">Receita veterinária</h3>
+                        <select class="input_dose quicksand" name="receita" id="receita">
+                            <option value="0">Selecione:</option>
+                            <option value="Medicamento">- Medicamento</option>
+                            <option value="Soro">- Soro</option>
+                            <option value="Nao necessario">- Não foi necessário</option>
+                        </select>
+                    <div>
+                        <button class="botao animacao" type="submit">Selecionar</button>
+                    </div>
+                </form>
             <div class="doses">
                 {% if tipo == "Soro" %}
                 <div class="caixinha">
-                    <h3>Cálculo do Soro</h3>
-                    <div class="dosesperguntas">
-                        <form method="POST" action="{{ url_for('prontuario_soro', codigo_agendamento=agendamento.codigo) }}">
-                            <label for="desidratacao" >Volume de fluidoterapia:</label>
-                            <select class="opcoes" name="desidratacao">
-                                <option value="leve">Leve - 50ml</option>
-                                <option value="moderada">Moderada - 75ml</option>
-                                <option value="grave">Grave - 100ml</option>
-                            </select>
-                            <label for="peso" class="pergunta3">Peso do animal:</label>
-                            <input class="dosecss pergunta2" type="number" name="peso_soro" step="0.01" value="{{ animal.peso }}" required min="0.01">
+                        <h3>Cálculo do Soro</h3>
+                        <form method="POST" action="{{ url_for('prontuario_soro', codigo_agendamento=agendamento.codigo) }}" class="flex lado">
+                            <div class="dosesperguntas">
+                                <div>
+                                    <label for="desidratacao">Volume de fluidoterapia:</label>
+                                    <select class="opcoes" name="desidratacao">
+                                        <option value="leve">Leve - 50ml</option>
+                                        <option value="moderada">Moderada - 75ml</option>
+                                        <option value="grave">Grave - 100ml</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="peso">Peso do animal:</label>
+                                    <input class="dosecss opcoes" type="number" name="peso_soro" step="0.01" value="{{ animal.peso }}" required>
+                                </div>
+                            </div>
                             <button class="botao" type="submit">Salvar</button>
                         </form>
-                    </div>
-
                 </div>
 
                 {% elif tipo == "Medicamento" %}
-                <div class="caixinha"> 
-                    <h3>Cálculo do Medicamento</h3>
-
-                    <div class="dosesperguntas">
-                        <form method="POST" action="{{ url_for('prontuario_medicamento', codigo_agendamento=agendamento.codigo) }}">
-                        <label for="dose_recomendada">Dose recomendada:</label>
-                        <input class="dosecss" type="number" name="dose_recomendada" step="0.01" required min="0.01">
-
-                        <label class="pergunta3" for="peso">Peso do animal:</label>
-                        <input class="dosecss pergunta2" type="number" name="peso_medicamento" step="0.01" value="{{ animal.peso }}" required min="0.01">                    
-                        <button class="botao" type="submit">Salvar</button>
+                <div class="caixinha">
+                        <h3>Cálculo do Medicamento</h3>
+                        <form method="POST" action="{{ url_for('prontuario_medicamento', codigo_agendamento=agendamento.codigo) }}" class="flex lado">
+                            <div class="dosesperguntas">
+                                <div>
+                                    <label for="dose_recomendada">Dose recomendada:</label>
+                                    <input class="dosecss" type="number" name="dose_recomendada" step="0.01" required>
+                                </div>
+                                <div>
+                                    <label for="peso">Peso do animal:</label>
+                                    <input class="dosecss opcoes" type="number" name="peso_medicamento" step="0.01" value="{{ animal.peso }}" required>
+                                </div>
+                            </div>
+                            <button class="botao" type="submit">Salvar</button>
                         </form>
-                    </div>
                 </div>
-
-
-                    </form>
-            {% endif %}        
+                {% else %}
+                <div class="caixinhavazia"</div>
+                {% endif %}
             </div>
-
         </section>
-
     </main>
 
     <footer class="flex">
