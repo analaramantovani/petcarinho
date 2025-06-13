@@ -178,11 +178,11 @@ agendamentos = [{
         'telefone': '(21) 99876-5432',
         'codigovet': 2,
         'nomevet': 'Gustavo',
-        'datahora': '2025-06-05T22:00',
+        'datahora': '2025-06-13T22:00',
         'sintomas': 'Tosse persistente',
-        'datahora_obj': datetime(2025, 6, 5, 22, 0),
-        'datahora_formatada': '05/06/2025 às 22:00',
-        'data_somente': date(2025, 6, 5)
+        'datahora_obj': datetime(2025, 6, 13, 22, 0),
+        'datahora_formatada': '13/06/2025 às 22:00',
+        'data_somente': date(2025, 6, 13)
     },
     {
         'ativo': True,
@@ -193,12 +193,12 @@ agendamentos = [{
         'telefone': 'N/A',
         'codigovet': 2,
         'nomevet': 'Gustavo',
-        'datahora': '2025-06-12T23:00',
+        'datahora': '2025-06-13T23:00',
         'sintomas': 'Febre e apatia',
         'remarcavel': True,
-        'datahora_obj': datetime(2025, 6, 12, 23, 0),
-        'datahora_formatada': '12/06/2025 às 09:00',
-        'data_somente': date(2025, 6, 12),
+        'datahora_obj': datetime(2025, 6, 13, 23, 0),
+        'datahora_formatada': '13/06/2025 às 09:00',
+        'data_somente': date(2025, 6, 13),
     },
     {
         'ativo': True,
@@ -241,12 +241,12 @@ agendamentos = [{
         'telefone': '(11) 91234-5678',
         'codigovet': 2,
         'nomevet': 'Gustavo',
-        'datahora': '2025-07-04T15:15',
+        'datahora': '2025-06-13T15:15',
         'sintomas': 'Vômito frequente',
         'remarcavel': True,
-        'datahora_obj': datetime(2025, 7, 4, 15, 15),
-        'datahora_formatada': '04/07/2025 às 15:15',
-        'data_somente': date(2025, 7, 4),
+        'datahora_obj': datetime(2025, 6, 13, 15, 15),
+        'datahora_formatada': '13/06/2025 às 15:15',
+        'data_somente': date(2025, 6, 13),
     },
     {
         'ativo': True,
@@ -404,8 +404,8 @@ def pagina_veterinario(codigo):
                         an['data_nascimento_formatada'] = "Não informado"
                     animais_vet.append(an)
         return render_template('pagina_veterinario.html', codigo=codigo, usuario=usuario, LOGADO=LOGADO, animais_vet=animais_vet, agendamentos_vet=agendamentos_vet)
-    except:
-        flash(f'Ocorreu um erro inesperado', 'erro')
+    except Exception as e:
+        flash(f'Ocorreu um erro inesperado {e}', 'erro')
         return redirect('/')
 
 @app.route('/cadastro_usuario', methods=['GET', 'POST'])
